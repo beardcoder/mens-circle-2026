@@ -8,7 +8,7 @@
 return [
 
     // @see https://docs.sentry.io/product/sentry-basics/dsn-explainer/
-    'dsn' => env('SENTRY_LARAVEL_DSN', env('SENTRY_DSN')),
+    'dsn' => trim(env('SENTRY_LARAVEL_DSN', env('SENTRY_DSN')) ?: ''),
 
     // @see https://spotlightjs.com/
     // 'spotlight' => env('SENTRY_SPOTLIGHT', false),
@@ -18,10 +18,10 @@ return [
 
     // The release version of your application
     // Example with dynamic git hash: trim(exec('git --git-dir ' . base_path('.git') . ' log --pretty="%h" -n1 HEAD'))
-    'release' => env('SENTRY_RELEASE'),
+    'release' => env('SENTRY_RELEASE') ? trim(env('SENTRY_RELEASE')) : null,
 
     // When left empty or `null` the Laravel environment will be used (usually discovered from `APP_ENV` in your `.env`)
-    'environment' => env('SENTRY_ENVIRONMENT'),
+    'environment' => env('SENTRY_ENVIRONMENT') ? trim(env('SENTRY_ENVIRONMENT')) : null,
 
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#sample_rate
     'sample_rate' => env('SENTRY_SAMPLE_RATE') === null ? 1.0 : (float) env('SENTRY_SAMPLE_RATE'),
