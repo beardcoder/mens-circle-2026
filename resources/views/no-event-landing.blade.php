@@ -98,7 +98,9 @@
     </section>
 
     {{-- WhatsApp Community section --}}
-    <x-blocks.whatsapp-community />
+    @if(!empty($whatsappCommunityLink))
+        <x-blocks.whatsapp-community />
+    @endif
 
     {{-- Info Section --}}
     <section class="section">

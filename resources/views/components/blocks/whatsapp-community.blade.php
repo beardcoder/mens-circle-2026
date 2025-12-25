@@ -1,4 +1,3 @@
-@if(!empty($whatsappCommunityLink))
 <section class="section whatsapp-section" id="whatsapp-community">
     <div class="container">
         <div class="whatsapp__layout fade-in">
@@ -23,4 +22,3 @@
         </div>
     </div>
 </section>
-@endif
