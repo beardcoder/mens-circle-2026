@@ -42,20 +42,8 @@
 
     <!-- Structured Data -->
     @stack('structured_data')
-
-    <!-- Swetrix Analytics -->
-    <script src="https://swetrix.org/swetrix.js" defer></script>
 </head>
 <body>
-    <!-- Swetrix Analytics (No JavaScript Fallback) -->
-    <noscript>
-        <img
-            src="https://swetrixapi.letsbenow.de/log/noscript?pid=IoqgiYBJpKTv"
-            alt=""
-            referrerpolicy="no-referrer-when-downgrade"
-        />
-    </noscript>
-
     <!-- Skip Link -->
     <a href="#main" class="skip-link">Zum Inhalt springen</a>
 
@@ -190,17 +178,6 @@
             csrfToken: '{{ csrf_token() }}'
         };
     </script>
-
-    <!-- Swetrix Analytics Initialization -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            swetrix.init('IoqgiYBJpKTv', {
-                apiURL: 'https://swetrixapi.letsbenow.de/log',
-            })
-            swetrix.trackViews()
-        })
-    </script>
-
     @vite(['resources/js/app.js'])
     @stack('scripts')
 </body>
