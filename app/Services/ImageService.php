@@ -314,12 +314,6 @@ class ImageService
         if ($loading) {
             $attrs[] = 'loading="'.e($loading).'"';
         }
-        if ($width) {
-            $attrs[] = 'width="'.(int) $width.'"';
-        }
-        if ($height) {
-            $attrs[] = 'height="'.(int) $height.'"';
-        }
 
         foreach ($attributes as $key => $value) {
             $attrs[] = e($key).'="'.e($value).'"';
@@ -435,12 +429,6 @@ class ImageService
         }
         if ($loading) {
             $attrs[] = 'loading="'.e($loading).'"';
-        }
-        if ($width) {
-            $attrs[] = 'width="'.(int) $width.'"';
-        }
-        if ($height) {
-            $attrs[] = 'height="'.(int) $height.'"';
         }
 
         foreach ($attributes as $key => $value) {
