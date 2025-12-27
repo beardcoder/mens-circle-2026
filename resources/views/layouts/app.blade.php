@@ -72,6 +72,7 @@
                     <a href="{{ route('home') }}#ueber" class="nav__link" data-m:click="action=nav_click;element=link;target=ueber;location=header">Über</a>
                     <a href="{{ route('home') }}#reise" class="nav__link" data-m:click="action=nav_click;element=link;target=reise;location=header">Die Reise</a>
                     <a href="{{ route('home') }}#faq" class="nav__link" data-m:click="action=nav_click;element=link;target=faq;location=header">Fragen</a>
+                    <a href="{{ route('breathwork') }}" class="nav__link" data-m:click="action=nav_click;element=link;target=breathwork;location=header">Breathwork</a>
                     @if($hasNextEvent)
                         <a href="{{ route('event.show') }}" class="btn btn--primary btn--large nav__cta" data-m:click="action=cta_click;element=button;target=next_event;location=header">Nächster Termin</a>
                     @endif
@@ -130,6 +131,7 @@
                         <li><a href="{{ route('home') }}#ueber" data-m:click="action=nav_click;element=link;target=ueber;location=footer">Über uns</a></li>
                         <li><a href="{{ route('home') }}#reise" data-m:click="action=nav_click;element=link;target=reise;location=footer">Die Reise</a></li>
                         <li><a href="{{ route('home') }}#faq" data-m:click="action=nav_click;element=link;target=faq;location=footer">FAQ</a></li>
+                        <li><a href="{{ route('breathwork') }}" data-m:click="action=nav_click;element=link;target=breathwork;location=footer">Breathwork</a></li>
                         @if($hasNextEvent)
                             <li><a href="{{ route('event.show') }}" data-m:click="action=nav_click;element=link;target=next_event;location=footer">Nächster Termin</a></li>
                         @endif

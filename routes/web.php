@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BreathworkController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\LlmsController;
 use App\Http\Controllers\NewsletterController;
@@ -11,6 +12,7 @@ Route::get('/llms.txt', [LlmsController::class, 'show'])->name('llms.txt');
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/event', [EventController::class, 'showNext'])->name('event.show');
 Route::get('/event/{slug}', [EventController::class, 'show'])->name('event.show.slug');
+Route::get('/breathwork', [BreathworkController::class, 'show'])->name('breathwork');
 
 // Non-cached routes
 Route::middleware('doNotCacheResponse')->group(function () {
