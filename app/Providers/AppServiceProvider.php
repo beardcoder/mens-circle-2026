@@ -9,11 +9,7 @@ use App\Models\Event;
 use App\Models\EventRegistration;
 use App\Observers\EventObserver;
 use App\Observers\EventRegistrationObserver;
-use App\Settings\GeneralSettings;
-use Exception;
 use Illuminate\Support\Facades\Event as EventFacade;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use Spatie\LaravelSettings\Events\SettingsSaved;
 
@@ -30,33 +26,5 @@ class AppServiceProvider extends ServiceProvider
         EventRegistration::observe(EventRegistrationObserver::class);
 
         EventFacade::listen(SettingsSaved::class, ClearSettingsCache::class);
-
-        $this->shareGlobalViewData();
-    }
-
-    /**
-     * Share global data with all views.
-     * Uses forever caching with event-based invalidation for optimal performance.
-     */
-    protected function shareGlobalViewData(): void
-    {
-        try {
-            // Cache check for next event (invalidated via EventObserver)
-            $hasNextEvent = cache()->rememberForever('has_next_event', function () {
-                return Event::query()
-                    ->where('is_published', true)
-                    ->where('event_date', '>=', now())
-                    ->exists();
-            });
-
-            // Share all data at once using View::share() - faster than View::composer()
-            View::share([
-                'hasNextEvent' => $hasNextEvent,
-                'settings' => app(GeneralSettings::class),
-            ]);
-        } catch (Exception $exception) {
-            // During build time or when database is unavailable, skip view data sharing
-            // This prevents "could not find driver" errors during composer dump-autoload
-        }
     }
 }
