@@ -20,7 +20,7 @@
                     <a href="{{ route('home') }}" class="btn btn--primary">
                         Zur Startseite
                     </a>
-                    @if($hasNextEvent)
+                    @if($hasNextEvent ?? false)
                         <a href="{{ route('event.show') }}" class="btn btn--secondary">
                             Nächster Termin
                         </a>
