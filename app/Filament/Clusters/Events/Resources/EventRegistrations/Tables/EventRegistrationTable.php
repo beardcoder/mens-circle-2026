@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Clusters\Events\Resources\EventRegistrations\Tables;
 
+use App\Filament\Clusters\Members\Resources\Members\MemberResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -25,14 +26,11 @@ class EventRegistrationTable
                     ->label('Veranstaltung')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('first_name')
-                    ->label('Vorname')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('last_name')
-                    ->label('Nachname')
-                    ->searchable()
-                    ->sortable(),
+                TextColumn::make('member.full_name')
+                    ->label('Mitglied')
+                    ->searchable(['member.first_name', 'member.last_name'])
+                    ->url(fn ($record) => $record->member ? MemberResource::getUrl('view', ['record' => $record->member]) : null)
+                    ->color('primary'),
                 TextColumn::make('email')
                     ->label('E-Mail')
                     ->searchable()
@@ -81,6 +79,11 @@ class EventRegistrationTable
                 SelectFilter::make('event')
                     ->label('Veranstaltung')
                     ->relationship('event', 'title')
+                    ->searchable()
+                    ->preload(),
+                SelectFilter::make('member')
+                    ->label('Mitglied')
+                    ->relationship('member', 'email')
                     ->searchable()
                     ->preload(),
             ])

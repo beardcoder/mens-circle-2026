@@ -8,6 +8,7 @@ use App\Http\Requests\EventRegistrationRequest;
 use App\Mail\EventRegistrationConfirmation;
 use App\Models\Event;
 use App\Models\EventRegistration;
+use App\Services\MemberService;
 use App\Services\SmsService;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -19,6 +20,10 @@ use Spatie\ResponseCache\Facades\ResponseCache;
 
 class EventController extends Controller
 {
+    public function __construct(
+        private readonly MemberService $memberService
+    ) {}
+
     public function showNext(): View|RedirectResponse
     {
         $event = Event::published()
@@ -73,12 +78,16 @@ class EventController extends Controller
             ], 409);
         }
 
-        $hasExistingRegistration = EventRegistration::query()
-            ->where('event_id', $event->id)
-            ->where('email', $validated['email'])
-            ->exists();
+        // Find or create member
+        $member = $this->memberService->findOrCreate(
+            email: $validated['email'],
+            firstName: $validated['first_name'],
+            lastName: $validated['last_name'],
+            phoneNumber: $validated['phone_number'] ?? null
+        );
 
-        if ($hasExistingRegistration) {
+        // Check if member is already registered for this event
+        if ($this->memberService->hasRegisteredForEvent($member, $event->id)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Du bist bereits für diese Veranstaltung angemeldet.',
@@ -87,6 +96,7 @@ class EventController extends Controller
 
         $registration = EventRegistration::create([
             'event_id' => $event->id,
+            'member_id' => $member->id,
             'first_name' => $validated['first_name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
@@ -105,12 +115,14 @@ class EventController extends Controller
 
             Log::info('Event registration confirmation sent', [
                 'registration_id' => $registration->id,
+                'member_id' => $member->id,
                 'email' => $registration->email,
                 'event_id' => $event->id,
             ]);
         } catch (Exception $exception) {
             Log::error('Failed to send event registration confirmation', [
                 'registration_id' => $registration->id,
+                'member_id' => $member->id,
                 'email' => $registration->email,
                 'event_id' => $event->id,
                 'error' => $exception->getMessage(),

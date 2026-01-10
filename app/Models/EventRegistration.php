@@ -14,10 +14,11 @@ class EventRegistration extends Model
 
     protected $fillable = [
         'event_id',
+        'member_id',
         'first_name',
         'last_name',
         'email',
-        'phone_number', // Für zukünftige SMS-Benachrichtigungen
+        'phone_number',
         'privacy_accepted',
         'status',
         'confirmed_at',
@@ -26,6 +27,11 @@ class EventRegistration extends Model
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
+    }
+
+    public function member(): BelongsTo
+    {
+        return $this->belongsTo(Member::class);
     }
 
     protected function casts(): array

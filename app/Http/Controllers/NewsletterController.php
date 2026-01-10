@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NewsletterSubscriptionRequest;
 use App\Mail\NewsletterWelcome;
 use App\Models\NewsletterSubscription;
+use App\Services\MemberService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -15,31 +16,29 @@ use Illuminate\View\View;
 
 class NewsletterController extends Controller
 {
+    public function __construct(
+        private readonly MemberService $memberService
+    ) {}
+
     public function subscribe(NewsletterSubscriptionRequest $request): JsonResponse
     {
         $validated = $request->validated();
-        $subscription = NewsletterSubscription::withTrashed()->where('email', $validated['email'])->first();
 
-        if ($subscription && $subscription->status === 'active') {
+        // Find or create member
+        $member = $this->memberService->findOrCreate(
+            email: $validated['email']
+        );
+
+        // Check if already subscribed
+        if ($this->memberService->isSubscribedToNewsletter($member)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Diese E-Mail-Adresse ist bereits für den Newsletter angemeldet.',
             ], 409);
         }
 
-        if ($subscription) {
-            $subscription->update([
-                'status' => 'active',
-                'subscribed_at' => now(),
-                'unsubscribed_at' => null,
-                'deleted_at' => null, // Restore if soft deleted
-            ]);
-        } else {
-            $subscription = NewsletterSubscription::create([
-                'email' => $validated['email'],
-                'status' => 'active',
-            ]);
-        }
+        // Subscribe member to newsletter
+        $subscription = $this->memberService->subscribeToNewsletter($member);
 
         // Send welcome email
         try {
@@ -47,6 +46,7 @@ class NewsletterController extends Controller
         } catch (Exception $exception) {
             Log::error('Failed to send newsletter welcome email', [
                 'subscription_id' => $subscription->id,
+                'member_id' => $member->id,
                 'email' => $subscription->email,
                 'error' => $exception->getMessage(),
             ]);

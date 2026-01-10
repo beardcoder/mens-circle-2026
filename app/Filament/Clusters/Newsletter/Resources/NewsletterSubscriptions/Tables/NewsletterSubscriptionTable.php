@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Clusters\Newsletter\Resources\NewsletterSubscriptions\Tables;
 
+use App\Filament\Clusters\Members\Resources\Members\MemberResource;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -17,6 +18,12 @@ class NewsletterSubscriptionTable
     {
         return $table
             ->columns([
+                TextColumn::make('member.full_name')
+                    ->label('Mitglied')
+                    ->searchable(['member.first_name', 'member.last_name'])
+                    ->url(fn ($record) => $record->member ? MemberResource::getUrl('view', ['record' => $record->member]) : null)
+                    ->color('primary')
+                    ->placeholder('-'),
                 TextColumn::make('email')
                     ->label('E-Mail')
                     ->searchable()
@@ -40,6 +47,12 @@ class NewsletterSubscriptionTable
                     ->label('Angemeldet am')
                     ->dateTime('d.m.Y H:i')
                     ->sortable(),
+                TextColumn::make('unsubscribed_at')
+                    ->label('Abgemeldet am')
+                    ->dateTime('d.m.Y H:i')
+                    ->sortable()
+                    ->placeholder('-')
+                    ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('created_at')
                     ->label('Erstellt am')
                     ->dateTime('d.m.Y H:i')
