@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mens-circle.de/sitemap.xml

@@ -2,20 +2,15 @@
   "name": "mens-circle",
   "private": true,
   "workspaces": [
-    "cms",
-    "web"
+    "cms"
   ],
   "scripts": {
-    "dev": "bun run --filter '*' dev",
-    "dev:cms": "bun run --filter cms dev",
-    "dev:web": "bun run --filter web dev",
-    "build": "bun run --filter cms build && bun run --filter web build",
-    "build:cms": "bun run --filter cms build",
-    "build:web": "bun run --filter web build",
+    "dev": "npm run --workspace=cms dev",
+    "build": "npm run --workspace=cms build",
+    "start": "npm run --workspace=cms start",
     "lint:prettier:fix": "prettier . --write"
   },
   "dependencies": {
-    "prettier": "^3.8.1",
-    "prettier-plugin-astro": "^0.14.1"
+    "prettier": "^3.8.1"
   }
 }

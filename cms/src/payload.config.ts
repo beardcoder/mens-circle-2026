@@ -34,10 +34,11 @@ export default buildConfig({
     dateFormat: 'dd.MM.yyyy HH:mm',
     livePreview: {
       url: ({ data }) => {
+        // Since we're in a unified app, preview the same domain
         if (data.slug) {
-          return `${process.env.SITE_URL || 'http://localhost:4321'}/${data.slug}`;
+          return `/${data.slug}`;
         }
-        return process.env.SITE_URL || 'http://localhost:4321';
+        return '/';
       },
       collections: ['pages', 'events'],
       breakpoints: [

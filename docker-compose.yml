@@ -1,15 +1,14 @@
-# Coolify Docker Compose - Männerkreis
+# Coolify Docker Compose - Männerkreis (Unified App)
 # Deploy als "Docker Compose" Resource in Coolify
 #
 # Coolify Magic Variables (werden automatisch generiert):
 #   SERVICE_FQDN_CMS_3001   → FQDN + Proxy auf Port 3001
-#   SERVICE_FQDN_WEB_4400   → FQDN + Proxy auf Port 4400
 #   SERVICE_PASSWORD_64_PAYLOAD → Generiertes 64-Zeichen Payload Secret
 #
 # Manuell in Coolify setzen:
-#   PAYLOAD_API_KEY  → API Key aus CMS Admin → Users → API Key
 #   SMTP_HOST, SMTP_USER, SMTP_PASS → E-Mail Versand
 #   ADMIN_EMAIL      → Admin-Benachrichtigungen
+#   NEXT_PUBLIC_UMAMI_* → Optional: Umami Analytics
 
 services:
   cms:
@@ -19,33 +18,19 @@ services:
       - DATABASE_URL=file:/app/data/payload.db
       - PAYLOAD_SECRET=$SERVICE_PASSWORD_64_PAYLOAD
       - NODE_ENV=production
-      - SITE_URL=$SERVICE_FQDN_WEB
-      - CMS_URL=$SERVICE_FQDN_CMS
+      - NEXT_PUBLIC_SITE_URL=$SERVICE_FQDN_CMS
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT:-587}
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASS=${SMTP_PASS}
       - MAIL_FROM=${MAIL_FROM:-hallo@mens-circle.de}
       - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - NEXT_PUBLIC_UMAMI_ENABLED=${NEXT_PUBLIC_UMAMI_ENABLED:-false}
+      - NEXT_PUBLIC_UMAMI_WEBSITE_ID=${NEXT_PUBLIC_UMAMI_WEBSITE_ID:-}
+      - NEXT_PUBLIC_UMAMI_SCRIPT_URL=${NEXT_PUBLIC_UMAMI_SCRIPT_URL:-https://cloud.umami.is/script.js}
     volumes:
       - cms-media:/app/media
       - cms-data:/app/data
-
-  web:
-    build:
-      context: ./web
-      args:
-        - PUBLIC_UMAMI_ENABLED=${PUBLIC_UMAMI_ENABLED:-false}
-        - PUBLIC_UMAMI_WEBSITE_ID=${PUBLIC_UMAMI_WEBSITE_ID:-}
-        - PUBLIC_UMAMI_SCRIPT_URL=${PUBLIC_UMAMI_SCRIPT_URL:-}
-    environment:
-      - SERVICE_FQDN_WEB_4400
-      - CMS_URL=http://cms:3001
-      - PAYLOAD_API_KEY=${PAYLOAD_API_KEY}
-      - SITE_URL=$SERVICE_FQDN_WEB
-      - PUBLIC_UMAMI_ENABLED=${PUBLIC_UMAMI_ENABLED:-false}
-      - PUBLIC_UMAMI_WEBSITE_ID=${PUBLIC_UMAMI_WEBSITE_ID:-}
-      - PUBLIC_UMAMI_SCRIPT_URL=${PUBLIC_UMAMI_SCRIPT_URL:-}
 
 volumes:
   cms-media:

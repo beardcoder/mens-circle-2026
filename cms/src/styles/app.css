@@ -1,0 +1,75 @@
+/**
+ * Männerkreis Niederbayern/ Straubing - Main Stylesheet
+ * =========================================
+ *
+ * Modern CSS Architecture (2025)
+ *
+ * Features:
+ * - CSS Custom Properties with @property for animations
+ * - OKLCH color space for perceptually uniform colors
+ * - Logical properties for internationalization
+ * - Native CSS nesting
+ * - Container queries ready
+ * - Scroll-driven animations support
+ * - Reduced motion support
+ * - Dark mode with prefers-color-scheme
+ *
+ * Structure:
+ * 1. Base (variables, reset, typography)
+ * 2. Utilities (layout, animations, visual)
+ * 3. Components (buttons, header, footer, cards, forms, modal)
+ * 4. Sections (hero, intro, moderator, journey, faq, newsletter, cta, event, legal)
+ */
+
+/* ============================================
+   BASE
+   ============================================ */
+@import '@fontsource-variable/playfair-display';
+@import '@fontsource-variable/dm-sans';
+@import '@fontsource-variable/cormorant';
+@import 'base/_variables.css';
+@import 'base/_reset.css';
+@import 'base/_typography.css';
+
+/* ============================================
+   UTILITIES
+   ============================================ */
+@import 'utilities/_layout.css';
+@import 'utilities/_animations.css';
+@import 'utilities/_visual.css';
+@import 'utilities/_view-transitions.css';
+
+/* ============================================
+   COMPONENTS
+   ============================================ */
+@import 'components/_buttons.css';
+@import 'components/_header.css';
+@import 'components/_footer.css';
+@import 'components/_cards.css';
+@import 'components/_accordion.css';
+@import 'components/_forms.css';
+@import 'components/_modal.css';
+@import 'components/_toast.css';
+
+/* ============================================
+   SECTIONS
+   ============================================ */
+@import 'sections/_hero.css';
+@import 'sections/_intro.css';
+@import 'sections/_moderator.css';
+@import 'sections/_journey.css';
+@import 'sections/_testimonials.css';
+@import 'sections/_testimonial-form.css';
+@import 'sections/_faq.css';
+@import 'sections/_newsletter.css';
+@import 'sections/_whatsapp.css';
+@import 'sections/_cta.css';
+@import 'sections/_event.css';
+@import 'sections/_no-event.css';
+@import 'sections/_error.css';
+@import 'sections/_legal.css';
+
+/* ============================================
+   PRINT
+   ============================================ */
+@import 'utilities/_print.css';

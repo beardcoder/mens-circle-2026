@@ -1,0 +1,12 @@
+/* ============================================
+   VIEW TRANSITIONS API
+   ============================================
+
+   Bare minimum View Transition API for smooth page navigation.
+   Uses browser's default automatic transitions.
+   Falls back gracefully for browsers that don't support it.
+   ============================================ */
+
+@view-transition {
+  navigation: auto;
+}
