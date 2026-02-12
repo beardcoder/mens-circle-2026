@@ -10,6 +10,7 @@ import { FAQBlock } from '@/blocks/FAQ';
 import { NewsletterBlock } from '@/blocks/Newsletter';
 import { CTABlock } from '@/blocks/CTA';
 import { WhatsAppCommunityBlock } from '@/blocks/WhatsAppCommunity';
+import { triggerRevalidate } from '@/lib/triggerRevalidate';
 
 const isAuthenticated = ({ req: { user } }: { req: { user: unknown } }) => Boolean(user);
 
@@ -20,6 +21,22 @@ export const Pages: CollectionConfig = {
     create: isAuthenticated,
     update: isAuthenticated,
     delete: isAuthenticated,
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc, previousDoc }) => {
+        // Trigger Astro revalidation when page publish status changes or content is updated while published
+        if (doc.published !== previousDoc?.published || doc.published) {
+          await triggerRevalidate('pages', doc.slug);
+        }
+      },
+    ],
+    afterDelete: [
+      async ({ doc }) => {
+        // Trigger full revalidation on delete
+        await triggerRevalidate('pages', doc.slug);
+      },
+    ],
   },
   admin: {
     useAsTitle: 'title',

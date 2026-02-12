@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload';
+import { triggerRevalidate } from '@/lib/triggerRevalidate';
 
 const isAuthenticated = ({ req: { user } }: { req: { user: unknown } }) => Boolean(user);
 
@@ -8,6 +9,14 @@ export const SiteSettings: GlobalConfig = {
   access: {
     read: () => true,
     update: isAuthenticated,
+  },
+  hooks: {
+    afterChange: [
+      async () => {
+        // Trigger full site revalidation when settings change
+        await triggerRevalidate('site-settings');
+      },
+    ],
   },
   admin: {
     group: 'System',

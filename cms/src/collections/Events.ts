@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload';
+import { triggerRevalidate } from '@/lib/triggerRevalidate';
 
 const isAuthenticated = ({ req: { user } }: { req: { user: unknown } }) => Boolean(user);
 
@@ -9,6 +10,22 @@ export const Events: CollectionConfig = {
     create: isAuthenticated,
     update: isAuthenticated,
     delete: isAuthenticated,
+  },
+  hooks: {
+    afterChange: [
+      async ({ doc, previousDoc }) => {
+        // Trigger Astro revalidation when event publish status changes or content is updated while published
+        if (doc.published !== previousDoc?.published || doc.published) {
+          await triggerRevalidate('events', doc.slug);
+        }
+      },
+    ],
+    afterDelete: [
+      async ({ doc }) => {
+        // Trigger full revalidation on delete
+        await triggerRevalidate('events', doc.slug);
+      },
+    ],
   },
   admin: {
     useAsTitle: 'title',

@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload';
+import { triggerRevalidate } from '@/lib/triggerRevalidate';
 
 const isAuthenticated = ({ req: { user } }: { req: { user: unknown } }) => Boolean(user);
 
@@ -11,6 +12,23 @@ export const Testimonials: CollectionConfig = {
     delete: isAuthenticated,
   },
   defaultSort: 'sortOrder',
+  hooks: {
+    afterChange: [
+      async ({ doc, previousDoc }) => {
+        // Trigger revalidation when testimonial publish status changes or when published content is updated
+        // This ensures both publishing/unpublishing and content updates trigger revalidation
+        if (doc.published !== previousDoc?.published || doc.published) {
+          await triggerRevalidate('testimonials');
+        }
+      },
+    ],
+    afterDelete: [
+      async () => {
+        // Trigger revalidation on delete
+        await triggerRevalidate('testimonials');
+      },
+    ],
+  },
   admin: {
     useAsTitle: 'authorName',
     defaultColumns: ['authorName', 'published', 'sortOrder', 'createdAt'],
