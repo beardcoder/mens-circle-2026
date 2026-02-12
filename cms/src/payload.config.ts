@@ -76,7 +76,7 @@ export default buildConfig({
   globals: [SiteSettings],
   editor: lexicalEditor(),
   db: postgresAdapter({
-    push: true,
+    push: false,
     pool: process.env.DATABASE_URL
       ? { connectionString: process.env.DATABASE_URL }
       : {
