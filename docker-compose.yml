@@ -12,7 +12,7 @@
 
 services:
   cms:
-    build: ./cms
+    build: .
     environment:
       - SERVICE_FQDN_CMS_3001
       - DATABASE_URL=file:/app/data/payload.db
