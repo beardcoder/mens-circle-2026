@@ -22,6 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
     description: siteDescription,
     keywords: 'Männerkreis, Niederbayern, Männergruppe, persönliches Wachstum, Gemeinschaft, Männer',
     authors: [{ name: 'Markus Sommer' }],
+
+    applicationName: siteName,
     robots: 'index, follow',
     alternates: {
       canonical: process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3001',
@@ -41,7 +43,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export const viewport: Viewport = {
   width: 'device-width',
-  initialScale: 1.0,
+  initialScale: 1,
   themeColor: '#3d2817',
   colorScheme: 'light',
 };
@@ -86,20 +88,6 @@ export default async function FrontendLayout({ children }: { children: React.Rea
   return (
     <html lang="de" dir="ltr">
       <head>
-        {/* Security Headers */}
-        <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
-        <meta httpEquiv="X-Frame-Options" content="SAMEORIGIN" />
-        <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
-        <meta name="referrer" content="strict-origin-when-cross-origin" />
-
-        {/* DNS Prefetch */}
-        <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
-
-        {/* Favicons */}
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-        {/* Organization Schema */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}

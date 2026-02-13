@@ -1,7 +1,13 @@
+import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation';
 import { getPage, getTestimonials } from '@/lib/payload-api';
 import BlockRenderer from '@/components/blocks/BlockRenderer';
 import type { Metadata } from 'next';
+import { getPayload } from 'payload'
+import React, { cache } from 'react'
+import config from '../../../payload.config'
+
+import type { Page as PageType } from '../../../payload-types'
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -26,9 +32,36 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
+export async function generateStaticParams() {
+  const payload = await getPayload({ config })
+
+  const pages = await payload.find({
+    collection: 'pages',
+    draft: false,
+    limit: 1000,
+    overrideAccess: false,
+  })
+
+  const params = pages.docs
+    ?.filter((doc) => {
+      return doc.slug !== 'home'
+    })
+    .map(({ slug }) => {
+      return { slug }
+    })
+
+  return params || []
+}
+
+type Args = {
+  params: Promise<{
+    slug?: string
+  }>
+}
+
 export default async function Page({ params }: PageProps) {
-  const { slug } = await params;
-  const page = await getPage(slug);
+  const { slug = 'home' } = await params;
+  const page: PageType | null = await queryPageBySlug({ slug });
 
   if (!page) {
     notFound();
@@ -51,3 +84,23 @@ export default async function Page({ params }: PageProps) {
 
   return <BlockRenderer blocks={blocks} testimonials={testimonials} />;
 }
+
+const queryPageBySlug = cache(async ({ slug }: { slug: string }) => {
+  const { isEnabled: draft } = await draftMode()
+
+  const payload = await getPayload({ config })
+
+  const result = await payload.find({
+    collection: 'pages',
+    draft,
+    limit: 1,
+    overrideAccess: draft,
+    where: {
+      slug: {
+        equals: slug,
+      },
+    },
+  })
+
+  return result.docs?.[0] || null
+})
