@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { getTestimonials } from '@/lib/payload-api';
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Erfahrungsberichte',
   description: 'Was Teilnehmer über den Männerkreis Niederbayern/Straubing sagen.',

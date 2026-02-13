@@ -9,6 +9,8 @@ import config from '../../../payload.config'
 
 import type { Page as PageType } from '../../../payload-types'
 
+export const dynamic = 'force-dynamic'
+
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
@@ -32,36 +34,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export async function generateStaticParams() {
-  try {
-    const payload = await getPayload({ config })
-
-    const pages = await payload.find({
-      collection: 'pages',
-      draft: false,
-      limit: 1000,
-      overrideAccess: false,
-    })
-
-    const params = pages.docs
-      ?.filter((doc) => {
-        return doc.slug !== 'home'
-      })
-      .map(({ slug }) => {
-        return { slug }
-      })
-
-    return params || []
-  } catch {
-    return []
-  }
-}
-
-type Args = {
-  params: Promise<{
-    slug?: string
-  }>
-}
 
 export default async function Page({ params }: PageProps) {
   const { slug = 'home' } = await params;

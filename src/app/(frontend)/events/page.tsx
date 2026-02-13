@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getUpcomingEvents, getPastEvents } from '@/lib/payload-api';
 
+export const dynamic = 'force-dynamic'
+
 export const metadata: Metadata = {
   title: 'Veranstaltungen',
   description: 'Alle Treffen des Männerkreis Niederbayern/Straubing – kommende und vergangene Termine.',
