@@ -6,7 +6,7 @@ WORKDIR /app
 FROM base AS deps
 RUN apk add --no-cache vips-dev build-base python3
 COPY package.json bun.lock* ./
-RUN bun install
+RUN bun install --frozen-lockfile
 
 # --- Builder ---
 FROM base AS builder
@@ -19,10 +19,11 @@ ENV NEXT_TELEMETRY_DISABLED=1
 
 # Payload braucht diese Werte beim Build (next build), sonst hängt der Build.
 # Zur Laufzeit werden die echten Werte per docker-compose injiziert.
-ENV PAYLOAD_SECRET=build-time-dummy-secret-replace-at-runtime
-ENV DATABASE_URL=file:./data/payload.db
-
-RUN mkdir -p ./data && NODE_OPTIONS="--no-deprecation --max-old-space-size=4096" bun run next build
+RUN mkdir -p ./data && \
+    PAYLOAD_SECRET=build-time-dummy-secret \
+    DATABASE_URL=file:./data/payload.db \
+    NODE_OPTIONS="--no-deprecation --max-old-space-size=4096" \
+    bun run next build
 
 # --- Production Runner ---
 FROM oven/bun:1-alpine AS runner
@@ -50,4 +51,5 @@ USER payload
 
 EXPOSE 3001
 
-CMD ["bun", "run", "server.js"]
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["bun", "server.js"]

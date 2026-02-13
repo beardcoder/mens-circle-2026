@@ -13,18 +13,20 @@
 services:
   cms:
     build: .
+    restart: unless-stopped
     environment:
-      - SERVICE_FQDN_CMS_3001
+      - SERVICE_FQDN_CMS_3001=${SERVICE_FQDN_CMS_3001:-}
       - DATABASE_URL=file:/app/data/payload.db
-      - PAYLOAD_SECRET=$SERVICE_PASSWORD_64_PAYLOAD
+      - PAYLOAD_SECRET=${SERVICE_PASSWORD_64_PAYLOAD:-change-this-in-coolify}
       - NODE_ENV=production
-      - NEXT_PUBLIC_SITE_URL=$SERVICE_FQDN_CMS
+      - SITE_URL=${SERVICE_FQDN_CMS_3001:-http://localhost:3001}
+      - NEXT_PUBLIC_SITE_URL=${SERVICE_FQDN_CMS_3001:-http://localhost:3001}
       - SMTP_HOST=${SMTP_HOST}
       - SMTP_PORT=${SMTP_PORT:-587}
       - SMTP_USER=${SMTP_USER}
       - SMTP_PASS=${SMTP_PASS}
       - MAIL_FROM=${MAIL_FROM:-hallo@mens-circle.de}
-      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_EMAIL=${ADMIN_EMAIL:-}
       - NEXT_PUBLIC_UMAMI_ENABLED=${NEXT_PUBLIC_UMAMI_ENABLED:-false}
       - NEXT_PUBLIC_UMAMI_WEBSITE_ID=${NEXT_PUBLIC_UMAMI_WEBSITE_ID:-}
       - NEXT_PUBLIC_UMAMI_SCRIPT_URL=${NEXT_PUBLIC_UMAMI_SCRIPT_URL:-https://cloud.umami.is/script.js}
