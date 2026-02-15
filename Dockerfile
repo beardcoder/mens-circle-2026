@@ -42,9 +42,19 @@ RUN --mount=type=cache,target=/root/.composer/cache \
 # ----------------------------
 FROM ${PHP_IMAGE} AS production
 
-# Install PHP intl extension (required by Filament)
+# Install PHP extensions
+# - intl: required by Filament
+# - imagick: ImageMagick for image processing (Spatie Media Library)
+# - gd: GD library for image manipulation
+# - exif: EXIF data extraction from images
+# - gmagick: GraphicsMagick extension for enhanced image processing
 USER root
-RUN install-php-extensions intl
+RUN install-php-extensions \
+    intl \
+    imagick \
+    gd \
+    exif \
+    gmagick
 USER www-data
 
 ENV APP_ENV=production \
