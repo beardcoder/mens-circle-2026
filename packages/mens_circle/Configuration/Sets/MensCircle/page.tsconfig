@@ -1,2 +1,28 @@
 @import 'EXT:distribution_package/Configuration/BackendLayouts/*.tsconfig'
 TCEMAIN.default.disablePrependAtCopy = 1
+
+mod.web_layout.BackendLayouts {
+  default {
+    title = Default
+    config {
+      backend_layout {
+        colCount = 1
+        rowCount = 1
+        rows {
+          1 {
+            columns {
+              1 {
+                name = Content
+                colPos = 0
+                identifier = main
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+TCAdefaults.pages.backend_layout = pagets__default
+TCAdefaults.pages.backend_layout_next_level = pagets__default
